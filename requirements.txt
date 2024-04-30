@@ -1,0 +1,16 @@
+ requirements.txt:
+
+fastapi
+uvicorn
+pydantic
+mongodb
+motor
+
+This file specifies the dependencies required to run the application. These dependencies are:
+
+- fastapi: The FastAPI framework
+- uvicorn: The Uvicorn ASGI server
+- pydantic: The Pydantic library for data validation and serialization
+- mongodb: The MongoDB database driver
+- motor: The Motor library for asynchronous MongoDB access
+
