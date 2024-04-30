@@ -1,0 +1,192 @@
+
+pages/index.js
+
+import React from 'react';
+import ProductCard from '../components/ProductCard';
+
+const HomePage = () => {
+  const [products, setProducts] = React.useState([]);
+  const [pagination, setPagination] = React.useState({});
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch('/api/products');
+      const data = await response.json();
+      setProducts(data.products);
+      setPagination(data.pagination);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  return (
+    <div>
+      <h1>Products</h1>
+      <ul>
+        {products.map((product) => (
+          <li key={product._id}>
+            <ProductCard product={product} />
+          </li>
+        ))}
+      </ul>
+      <button onClick={fetchProducts}>Load More</button>
+    </div>
+  );
+};
+
+export default HomePage;
+
+
+pages/create-product.js
+
+import React, { useState } from 'react';
+import ProductForm from '../components/ProductForm';
+
+const CreateProductPage = () => {
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState(0);
+  const [description, setDescription] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, price, description }),
+      });
+      const data = await response.json();
+      // Handle response data
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Create Product</h1>
+      <ProductForm
+        name={name}
+        price={price}
+        description={description}
+        handleSubmit={handleSubmit}
+      />
+    </div>
+  );
+};
+
+export default CreateProductPage;
+
+
+pages/update-product/[id].js
+
+import React, { useState, useEffect } from 'react';
+import ProductForm from '../components/ProductForm';
+
+const UpdateProductPage = () => {
+  const [product, setProduct] = useState({});
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState(0);
+  const [description, setDescription] = useState('');
+
+  const fetchProduct = async () => {
+    try {
+      const response = await fetch(`/api/products/${product._id}`);
+      const data = await response.json();
+      setProduct(data.product);
+      setName(data.product.name);
+      setPrice(data.product.price);
+      setDescription(data.product.description);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProduct();
+  }, []);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch(`/api/products/${product._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, price, description }),
+      });
+      const data = await response.json();
+      // Handle response data
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Update Product {product._id}</h1>
+      <ProductForm
+        name={name}
+        price={price}
+        description={description}
+        handleSubmit={handleSubmit}
+      />
+    </div>
+  );
+};
+
+export default UpdateProductPage;
+
+
+pages/delete-product/[id].js
+
+import React from 'react';
+
+const DeleteProductPage = () => {
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`/api/products/${product._id}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      // Handle response data
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Delete Product</h1>
+      <button onClick={handleDelete}>Delete</button>
+    </div>
+  );
+};
+
+export default DeleteProductPage;
+
+
+pages/orders.js
+
+import React, { useState, useEffect } from 'react';
+import OrderCard from '../components/OrderCard';
+
+const OrdersPage = () => {
+  const [orders, setOrders] = useState([]);
+  const [pagination, setPagination] = useState({});
+
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch('/api/orders');
+      const data = await response.json();
+      setOrders(data.orders);
+      setPagination(data.pagination);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
